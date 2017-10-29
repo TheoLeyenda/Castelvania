@@ -515,7 +515,7 @@ class ApplicationMain {
 		
 		config = {
 			
-			build: "108",
+			build: "125",
 			company: "...",
 			file: "Castelvania-theo",
 			fps: 60,
