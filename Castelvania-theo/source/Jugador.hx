@@ -20,9 +20,16 @@ class Jugador extends FlxSprite
 	private var state:Estado = Estado.QUIETO;
 	private var habilitarA:Bool = false;
 	private var habilitarD:Bool = false;
+	private var Pinia:Trompada;
+	private var habilitarTimer:Bool = false;
+	private var tiempoPinia:Int = 15;
 	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
 	{
 		super(X, Y, SimpleGraphic);
+		
+		Pinia = new Trompada(x, y);
+		Pinia.kill();
+		
 		
 		loadGraphic(AssetPaths.jugador__png, true, 32, 32);
 		
@@ -38,6 +45,7 @@ class Jugador extends FlxSprite
 	override public function update(elapsed:Float):Void
 	{
 		maquinaStado();
+		Golpear();
 		if (isTouching(FlxObject.FLOOR))
 		{
 			habilitarA = true;
@@ -138,6 +146,27 @@ class Jugador extends FlxSprite
 					//animacion quieto
 				}
 			}
+		}
+	}
+	public function Golpear():Void
+	{
+		if (FlxG.keys.pressed.L)
+		{
+			Pinia.reset(x+width/2, y+(height*0.4));
+			Pinia.makeGraphic(3, 3, 0xffff00ff);
+			Pinia.velocity.x = 100;
+			FlxG.state.add(Pinia);
+			habilitarTimer = true;
+		}
+		if (habilitarTimer)
+		{
+			tiempoPinia = tiempoPinia - 1;
+		}
+		if (tiempoPinia == 0)
+		{
+			habilitarTimer = false;
+			tiempoPinia = 15;
+			Pinia.kill();
 		}
 	}
 }

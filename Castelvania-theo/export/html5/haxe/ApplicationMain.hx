@@ -139,7 +139,7 @@ class ApplicationMain {
 		
 		config = {
 			
-			build: "63",
+			build: "72",
 			company: "...",
 			file: "Castelvania-theo",
 			fps: 60,

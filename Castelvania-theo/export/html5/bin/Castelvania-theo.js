@@ -76,7 +76,7 @@ ApplicationMain.init = function() {
 	}
 };
 ApplicationMain.main = function() {
-	ApplicationMain.config = { build : "63", company : "...", file : "Castelvania-theo", fps : 60, name : "Castelvania-theo", orientation : "", packageName : "com.example.myapp", version : "0.0.1", windows : [{ antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : false, height : 240, parameters : "{}", resizable : false, stencilBuffer : true, title : "Castelvania-theo", vsync : true, width : 256, x : null, y : null}]};
+	ApplicationMain.config = { build : "72", company : "...", file : "Castelvania-theo", fps : 60, name : "Castelvania-theo", orientation : "", packageName : "com.example.myapp", version : "0.0.1", windows : [{ antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : false, height : 240, parameters : "{}", resizable : false, stencilBuffer : true, title : "Castelvania-theo", vsync : true, width : 256, x : null, y : null}]};
 };
 ApplicationMain.start = function() {
 	var hasMain = false;
@@ -4901,6 +4901,8 @@ var Jugador = function(X,Y,SimpleGraphic) {
 	if(X == null) {
 		X = 0;
 	}
+	this.tiempoPinia = 5;
+	this.habilitarTimer = false;
 	this.habilitarD = false;
 	this.habilitarA = false;
 	this.state = Estado.QUIETO;
@@ -4916,6 +4918,7 @@ Jugador.__super__ = flixel_FlxSprite;
 Jugador.prototype = $extend(flixel_FlxSprite.prototype,{
 	update: function(elapsed) {
 		this.maquinaStado();
+		this.Golpear();
 		if((this.touching & 4096) > 0) {
 			this.habilitarA = true;
 			this.habilitarD = true;
@@ -5010,6 +5013,21 @@ Jugador.prototype = $extend(flixel_FlxSprite.prototype,{
 					this.set_facing(1);
 				}
 			}
+		}
+	}
+	,Golpear: function() {
+		var _this = flixel_FlxG.keys.pressed;
+		if(_this.keyManager.checkStatus(76,_this.status)) {
+			this.Pinia = new Trompada(0,0);
+			this.Pinia.makeGraphic(10,10,16711935);
+			flixel_FlxG.game._state.add(this.Pinia);
+			this.habilitarTimer = true;
+		}
+		if(this.habilitarTimer) {
+			this.tiempoPinia -= 1;
+		}
+		if(this.tiempoPinia == 0) {
+			this.Pinia.destroy();
 		}
 	}
 	,__class__: Jugador
@@ -5731,11 +5749,10 @@ PlayState.prototype = $extend(flixel_FlxState.prototype,{
 		this.plataforma.set_immovable(true);
 		this.add(this.plataforma);
 		this.add(this.player);
+		flixel_FlxG.camera.follow(this.player);
 	}
 	,update: function(elapsed) {
 		flixel_FlxState.prototype.update.call(this,elapsed);
-		flixel_FlxG.camera.set_x(this.player.x);
-		flixel_FlxG.camera.set_y(this.player.y);
 		flixel_FlxG.overlap(this.plataforma,this.player,null,flixel_FlxObject.separate);
 	}
 	,__class__: PlayState
@@ -5953,6 +5970,22 @@ StringTools.hex = function(n,digits) {
 	}
 	return s;
 };
+var Trompada = function(X,Y,SimpleGraphic) {
+	if(Y == null) {
+		Y = 0;
+	}
+	if(X == null) {
+		X = 0;
+	}
+	flixel_FlxSprite.call(this,X,Y,SimpleGraphic);
+	this.velocity.set_x(10);
+};
+$hxClasses["Trompada"] = Trompada;
+Trompada.__name__ = ["Trompada"];
+Trompada.__super__ = flixel_FlxSprite;
+Trompada.prototype = $extend(flixel_FlxSprite.prototype,{
+	__class__: Trompada
+});
 var ValueType = $hxClasses["ValueType"] = { __ename__ : ["ValueType"], __constructs__ : ["TNull","TInt","TFloat","TBool","TObject","TFunction","TClass","TEnum","TUnknown"] };
 ValueType.TNull = ["TNull",0];
 ValueType.TNull.toString = $estr;
